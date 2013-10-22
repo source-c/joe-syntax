@@ -6,8 +6,8 @@
 =Comment 	green
 =String 	cyan
 =Escape 	bold cyan
-=Array		yellow
-=Keyword	bold yellow
+=Array		bold yellow
+=Keyword	yellow
 =Number		bold magenta
 =Bad		bg_red black
 
