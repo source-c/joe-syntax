@@ -1,0 +1,68 @@
+# JOE syntax simple highlight file for JSON
+# Based on the very rudimentary lisp syntax file
+
+=Idle
+=Object		bold
+=Comment 	green
+=String 	cyan
+=Escape 	bold cyan
+=Array		yellow
+=Keyword	bold yellow
+=Number		bold magenta
+=Bad		bg_red black
+
+:idle Idle
+	*		idle
+	"\""		string		recolor=-1
+	"/"		slash
+	"[]"		array		recolor=-1
+	"{}"		object		recolor=-1
+	"';"		notstring	recolor=-1
+	"a-zA-Z_"	maybe_keyword	buffer
+	"0-9"		number		recolor=-1
+
+:maybe_keyword Idle
+	*		idle		noeat	strings
+	"null"		keyword
+done
+	"0-9a-zA-Z_"	maybe_keyword
+	
+:number Number
+	*		idle		noeat
+	"0-9."		number
+	
+:notstring Bad
+	*		notstring
+	"\n"		idle
+
+:slash Idle
+	*		idle
+	"/"		slash
+	"*"		mcomment	recolor=-2
+
+:mcomment Comment
+	*		mcomment
+	"*"		maybe_end_mcomment
+	
+:maybe_end_mcomment Comment
+	*		mcomment
+	"*"		maybe_end_mcomment
+	"/"		idle
+
+:string String
+	*		string
+	"\""		idle
+	"\\"		string_escape	recolor=-1
+
+:string_escape Escape
+	*		string
+	"\n"		string		recolor=-2
+
+:array Array
+	*		idle		noeat
+
+:object Object
+	*		idle		noeat
+
+:keyword Keyword
+	*		idle		noeat
