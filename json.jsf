@@ -24,6 +24,8 @@
 :maybe_keyword Idle
 	*		idle		noeat	strings
 	"null"		keyword
+	"true"		keyword
+	"false"		keyword
 done
 	"0-9a-zA-Z_"	maybe_keyword
 	
