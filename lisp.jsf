@@ -1,0 +1,934 @@
+# JOE syntax highlight file for CommonLisp
+# originally inspired by Clojure's JSF
+
+=Idle
+=Comment 	green
+=Escape 	bold cyan
+=Constant	cyan
+=Value		yellow bold
+=Bad		bold red
+=Keyword	bold
+=Key		yellow
+=Method		yellow bold
+
+:reset Idle
+	*		idle		noeat call=.commonlisp()
+
+.subr commonlisp
+
+:idle Idle
+	*		symbol		mark buffer
+	" \t\f\n\r"	idle
+	"("		idle		call=.commonlisp(paren)
+	"["		idle		call=.commonlisp(brack)
+	"{"		idle		call=.commonlisp(squiggly)
+.ifdef paren
+	")"		idle		return
+.else
+	")"		stray		recolor=-1
+.endif
+.ifdef brack
+	"]"		idle		return
+.else
+	"]"		stray		recolor=-1
+.endif
+.ifdef squiggly
+	"}"		idle		return
+.else
+	"}"		stray		recolor=-1
+.endif
+	";"		comment		recolor=-1
+	"1"		one		recolor=-1
+	"2"		two		recolor=-1
+	"8"		eight		recolor=-1
+	"0345679"	number		recolor=-1
+	"-"		negative	recolor=-1 mark buffer
+	"\""		string		recolor=-1
+	"#"		pound
+	"'`^@~"		quote
+	"\\"		backslash	recolor=-1
+	"."		maybe_float
+	":"		key		recolor=-1
+	"."		method		recolor=-1
+
+:stray Bad
+	*		idle		noeat
+
+:backslash Escape
+	*		back_single	buffer mark
+	"u"		back_uni4
+	"o"		back_oct3
+	
+
+:back_single Escape
+	*		back_word	recolor=-2
+	"]}),  \t\f\n\r;"	idle	noeat
+
+:back_word Bad
+	*		back_word
+	"]}),  \t\f\n\r;"	idle	noeat markend strings
+	"newline"	good_literal	recolormark
+	"space"		good_literal	recolormark
+	"tab"		good_literal	recolormark
+	"formfeed"	good_literal	recolormark
+	"backspace"	good_literal	recolormark
+	"return"	goot_literal	recolormark
+done
+
+:good_literal Escape
+	*		idle	noeat
+
+:back_oct3 Escape
+	*		bad		noeat
+	"0-7"		back_oct2
+
+:back_oct2 Escape
+	*		bad		noeat
+	"0-7"		back_oct1
+
+:back_oct1 Escape
+	*		bad		noeat
+	"0-7"		bad
+
+:back_uni4 Escape
+	*		bad		noeat
+	"0-9a-fA-F"	back_uni3
+
+:back_uni3 Escape
+	*		bad		noeat
+	"0-9a-fA-F"	back_uni2
+
+:back_uni2 Escape
+	*		bad		noeat
+	"0-9a-fA-F"	back_uni1
+
+:back_uni1 Escape
+	*		bad		noeat
+	"0-9a-fA-F"	bad
+
+:negative Idle
+	*		symbol		noeat
+	"1"		one		recolor=-2
+	"2"		two		recolor=-2
+	"8"		eight		recolor=-2
+	"0345679"	number		recolor=-2
+	"."		maybe_neg_float
+
+:symbol Idle
+	*		symbol
+	"]}), \t\n;"	ident_end	noeat markend strings
+# Symbols which are built-in values
+	"nil"		value
+	"true"		value
+	"false"		value
+	"."		common
+	"catch"		common
+	"def"		common
+	"do"		common
+	"finally"		common
+	"fn"		common
+	"if"		common
+	"else"		common
+	"return"	common
+	"return-from"	common
+	"let"		common
+	"loop"		common
+	"monitor-enter"		common
+	"monitor-exit"		common
+	"new"		common
+	"quote"		common
+	"recur"		common
+	"set!"		common
+	"throw"		common
+	"try"		common
+	"var"		common
+	"catch"		common
+	"finally"		common
+	"throw"		common
+	"try"		common
+	"case"		common
+	"cond"		common
+	"cond->"		common
+	"cond->>"		common
+	"condp"		common
+	"car"		common
+	"if-let"		common
+	"if-not"		common
+	"when"		common
+	"when-first"		common
+	"when-let"		common
+	"when-not"		common
+	"doall"		common
+	"dorun"		common
+	"doseq"		common
+	"dotimes"		common
+	"while"		common
+	"definline"		common
+	"definterface"		common
+	"defmacro"		common
+	"defmethod"		common
+	"defmulti"		common
+	"defn"		common
+	"defn-"		common
+	"defonce"		common
+	"defprotocol"		common
+	"defrecord"		common
+	"defstruct"		common
+	"deftype"		common
+	"defun"			common
+	"defvar"		common
+	"function"		common
+	"->"		common
+	"->>"		common
+	".."		common
+	"amap"		common
+	"and"		common
+	"areduce"		common
+	"as->"		common
+	"assert"		common
+	"binding"		common
+	"bound-fn"		common
+	"comment"		common
+	"declare"		common
+	"delay"		common
+	"dosync"		common
+	"doto"		common
+	"etypecase"		common
+	"extend-protocol"		common
+	"extend-type"		common
+	"for"		common
+	"future"		common
+	"gen-class"		common
+	"gen-interface"		common
+	"import"		common
+	"io!"		common
+	"lazy-cat"		common
+	"lazy-seq"		common
+	"letfn"		common
+	"locking"		common
+	"memfn"		common
+	"ns"		common
+	"or"		common
+	"progn"		common
+	"proxy"		common
+	"proxy-super"		common
+	"pvalues"		common
+	"reify"		common
+	"some->"		common
+	"some->>"		common
+	"sync"		common
+	"time"		common
+	"with-bindings"		common
+	"with-in-str"		common
+	"with-loading-context"		common
+	"with-local-vars"		common
+	"with-open"		common
+	"with-out-str"		common
+	"with-precision"		common
+	"with-redefs"		common
+	"*"		common
+	"*'"		common
+	"+"		common
+	"+'"		common
+	"-"		common
+	"-'"		common
+	"->ArrayChunk"		common
+	"->Vec"		common
+	"->VecNode"		common
+	"->VecSeq"		common
+	"-cache-protocol-fn"		common
+	"-reset-methods"		common
+	"/"		common
+	"<"		common
+	"<="		common
+	"="		common
+	"=="		common
+	">"		common
+	">="		common
+	"accessor"		common
+	"aclone"		common
+	"add-classpath"		common
+	"add-watch"		common
+	"agent"		common
+	"agent-error"		common
+	"agent-errors"		common
+	"aget"		common
+	"alength"		common
+	"alias"		common
+	"all-ns"		common
+	"alter"		common
+	"alter-meta!"		common
+	"alter-var-root"		common
+	"ancestors"		common
+	"apply"		common
+	"append"	common
+	"array-map"		common
+	"aset"		common
+	"aset-boolean"		common
+	"aset-byte"		common
+	"aset-char"		common
+	"aset-double"		common
+	"aset-float"		common
+	"aset-int"		common
+	"aset-long"		common
+	"aset-short"		common
+	"assoc"		common
+	"assoc!"		common
+	"assoc-in"		common
+	"associative?"		common
+	"atom"		common
+	"await"		common
+	"await-for"		common
+	"await1"		common
+	"bases"		common
+	"bean"		common
+	"bigdec"		common
+	"bigint"		common
+	"biginteger"		common
+	"bit-and"		common
+	"bit-and-not"		common
+	"bit-clear"		common
+	"bit-flip"		common
+	"bit-not"		common
+	"bit-or"		common
+	"bit-set"		common
+	"bit-shift-left"		common
+	"bit-shift-right"		common
+	"bit-test"		common
+	"bit-xor"		common
+	"boolean"		common
+	"boolean-array"		common
+	"booleans"		common
+	"bound-fn*"		common
+	"bound?"		common
+	"butlast"		common
+	"byte"		common
+	"byte-array"		common
+	"bytes"		common
+	"cast"		common
+	"char"		common
+	"char-array"		common
+	"char?"		common
+	"char="		common
+	"chars"		common
+	"chunk"		common
+	"chunk-append"		common
+	"chunk-buffer"		common
+	"chunk-cons"		common
+	"chunk-first"		common
+	"chunk-next"		common
+	"chunk-rest"		common
+	"chunked-seq?"		common
+	"class"		common
+	"class?"		common
+	"clear-agent-errors"		common
+	"coll?"		common
+	"collect"	common
+	"commute"		common
+	"comp"		common
+	"comparator"		common
+	"compare"		common
+	"compare-and-set!"		common
+	"compile"		common
+	"complement"		common
+	"concat"		common
+	"concatenate"		common
+	"condition"		common
+	"conj"		common
+	"conj!"		common
+	"cons"		common
+	"constantly"		common
+	"construct-proxy"		common
+	"contains?"		common
+	"count"		common
+	"counted?"		common
+	"create-ns"		common
+	"create-struct"		common
+	"cycle"		common
+	"dec"		common
+	"dec'"		common
+	"decimal?"		common
+	"delay?"		common
+	"deliver"		common
+	"denominator"		common
+	"deref"		common
+	"derive"		common
+	"descendants"		common
+	"destructure"		common
+	"disj"		common
+	"disj!"		common
+	"dissoc"		common
+	"dissoc!"		common
+	"distinct"		common
+	"distinct?"		common
+	"double"		common
+	"double-array"		common
+	"doubles"		common
+	"downto"		common
+	"drop"		common
+	"drop-last"		common
+	"drop-while"		common
+	"empty"		common
+	"empty?"		common
+	"ensure"		common
+	"enumeration-seq"		common
+	"error-handler"		common
+	"error-mode"		common
+	"eval"		common
+	"even?"		common
+	"every-pred"		common
+	"every?"		common
+	"ex-data"		common
+	"ex-info"		common
+	"extend"		common
+	"extenders"		common
+	"extends?"		common
+	"false?"		common
+	"ffirst"		common
+	"file-seq"		common
+	"filter"		common
+	"filterv"		common
+	"find"		common
+	"find-keyword"		common
+	"find-ns"		common
+	"find-protocol-impl"		common
+	"find-protocol-method"		common
+	"find-var"		common
+	"first"		common
+	"flatten"		common
+	"float"		common
+	"float-array"		common
+	"float?"		common
+	"floats"		common
+	"flush"		common
+	"fn?"		common
+	"fnext"		common
+	"fnil"		common
+	"force"		common
+	"form"		common
+	"format"		common
+	"frequencies"		common
+	"funcall"	common
+	"future-call"		common
+	"future-cancel"		common
+	"future-cancelled?"		common
+	"future-done?"		common
+	"future?"		common
+	"gensym"		common
+	"get"		common
+	"get-in"		common
+	"get-method"		common
+	"get-proxy-class"		common
+	"get-thread-bindings"		common
+	"get-validator"		common
+	"group-by"		common
+	"handler-case"		common
+	"hash"		common
+	"hash-combine"		common
+	"hash-map"		common
+	"hash-set"		common
+	"identical?"		common
+	"identity"		common
+	"ifn?"		common
+	"in-ns"		common
+	"inc"		common
+	"inc'"		common
+	"incf"		common
+	"init-proxy"		common
+	"instance?"		common
+	"int"		common
+	"int-array"		common
+	"integer?"		common
+	"interleave"		common
+	"intern"		common
+	"internal"		common
+	"interpose"		common
+	"into"		common
+	"into-array"		common
+	"ints"		common
+	"isa?"		common
+	"iterate"		common
+	"iterator-seq"		common
+	"juxt"		common
+	"keep"		common
+	"keep-indexed"		common
+	"key"		common
+	"keys"		common
+	"keyword"		common
+	"keyword?"		common
+	"lambda"		common
+	"last"		common
+	"line-seq"		common
+	"list"		common
+	"list*"		common
+	"list?"		common
+	"load"		common
+	"load-file"		common
+	"load-reader"		common
+	"load-string"		common
+	"loaded-libs"		common
+	"long"		common
+	"long-array"		common
+	"longs"		common
+	"macroexpand"		common
+	"macroexpand-1"		common
+	"make-array"		common
+	"make-hierarchy"		common
+	"map"		common
+	"map-indexed"		common
+	"map?"		common
+	"mapcat"		common
+	"mapv"		common
+	"max"		common
+	"max-key"		common
+	"memoize"		common
+	"merge"		common
+	"merge-with"		common
+	"meta"		common
+	"method-sig"		common
+	"methods"		common
+	"min"		common
+	"min-key"		common
+	"mod"		common
+	"munge"		common
+	"name"		common
+	"namespace"		common
+	"namespace-munge"		common
+	"neg?"		common
+	"newline"		common
+	"next"		common
+	"nfirst"		common
+	"nil?"		common
+	"nnext"		common
+	"not"		common
+	"not-any?"		common
+	"not-empty"		common
+	"not-every?"		common
+	"not="		common
+	"ns-aliases"		common
+	"ns-imports"		common
+	"ns-interns"		common
+	"ns-map"		common
+	"ns-name"		common
+	"ns-publics"		common
+	"ns-refers"		common
+	"ns-resolve"		common
+	"ns-unalias"		common
+	"ns-unmap"		common
+	"nth"		common
+	"nthnext"		common
+	"nthrest"		common
+	"num"		common
+	"number?"		common
+	"numerator"		common
+	"object-array"		common
+	"odd?"		common
+	"parents"		common
+	"partial"		common
+	"partition"		common
+	"partition-all"		common
+	"partition-by"		common
+	"pcalls"		common
+	"peek"		common
+	"persistent!"		common
+	"pmap"		common
+	"pop"		common
+	"pop!"		common
+	"pop-thread-bindings"		common
+	"pos?"		common
+	"pr"		common
+	"pr-str"		common
+	"prefer-method"		common
+	"prefers"		common
+	"princ"		common
+	"print"		common
+	"print-ctor"		common
+	"print-simple"		common
+	"print-str"		common
+	"printf"		common
+	"println"		common
+	"println-str"		common
+	"prn"		common
+	"prn-str"		common
+	"promise"		common
+	"proxy-call-with-super"		common
+	"proxy-mappings"		common
+	"proxy-name"		common
+	"push"		common
+	"push-thread-bindings"		common
+	"quot"		common
+	"rand"		common
+	"rand-int"		common
+	"rand-nth"		common
+	"range"		common
+	"ratio?"		common
+	"rational?"		common
+	"rationalize"		common
+	"re-find"		common
+	"re-groups"		common
+	"re-matcher"		common
+	"re-matches"		common
+	"re-pattern"		common
+	"re-seq"		common
+	"read"		common
+	"read-line"		common
+	"read-string"		common
+	"realized?"		common
+	"reduce"		common
+	"reduce-kv"		common
+	"reduced"		common
+	"reduced?"		common
+	"reductions"		common
+	"ref"		common
+	"ref-history-count"		common
+	"ref-max-history"		common
+	"ref-min-history"		common
+	"ref-set"		common
+	"refer"		common
+	"release-pending-sends"		common
+	"rem"		common
+	"remove"		common
+	"remove-all-methods"		common
+	"remove-method"		common
+	"remove-ns"		common
+	"remove-watch"		common
+	"repeat"		common
+	"repeatedly"		common
+	"replace"		common
+	"replicate"		common
+	"require"		common
+	"reset!"		common
+	"reset-meta!"		common
+	"resolve"		common
+	"rest"		common
+	"restart-agent"		common
+	"resultset-seq"		common
+	"reverse"		common
+	"reversible?"		common
+	"rseq"		common
+	"rsubseq"		common
+	"satisfies?"		common
+	"second"		common
+	"select-keys"		common
+	"send"		common
+	"send-off"		common
+	"send-via"		common
+	"seq"		common
+	"seq?"		common
+	"seque"		common
+	"sequence"		common
+	"sequential?"		common
+	"set"		common
+	"set-agent-send-executor!"		common
+	"set-agent-send-off-executor!"		common
+	"set-error-handler!"		common
+	"set-error-mode!"		common
+	"set-validator!"		common
+	"set?"		common
+	"setf"		common
+	"short"		common
+	"short-array"		common
+	"shorts"		common
+	"shuffle"		common
+	"shutdown-agents"		common
+	"slurp"		common
+	"some"		common
+	"some-fn"		common
+	"sort"		common
+	"sort-by"		common
+	"sorted-map"		common
+	"sorted-map-by"		common
+	"sorted-set"		common
+	"sorted-set-by"		common
+	"sorted?"		common
+	"special-symbol?"		common
+	"spit"		common
+	"split-at"		common
+	"split-with"		common
+	"str"		common
+	"string"	common
+	"string?"		common
+	"struct"		common
+	"struct-map"		common
+	"subs"		common
+	"subseq"		common
+	"subvec"		common
+	"supers"		common
+	"swap!"		common
+	"symbol"		common
+	"symbol?"		common
+	"take"		common
+	"take-last"		common
+	"take-nth"		common
+	"take-while"		common
+	"test"		common
+	"the-ns"		common
+	"thread-bound?"		common
+	"to-array"		common
+	"to-array-2d"		common
+	"trampoline"		common
+	"transient"		common
+	"tree-seq"		common
+	"true?"		common
+	"type"		common
+	"unchecked-add"		common
+	"unchecked-add-int"		common
+	"unchecked-byte"		common
+	"unchecked-char"		common
+	"unchecked-dec"		common
+	"unchecked-dec-int"		common
+	"unchecked-divide-int"		common
+	"unchecked-double"		common
+	"unchecked-float"		common
+	"unchecked-inc"		common
+	"unchecked-inc-int"		common
+	"unchecked-int"		common
+	"unchecked-long"		common
+	"unchecked-multiply"		common
+	"unchecked-multiply-int"		common
+	"unchecked-negate"		common
+	"unchecked-negate-int"		common
+	"unchecked-remainder-int"		common
+	"unchecked-short"		common
+	"unchecked-subtract"		common
+	"unchecked-subtract-int"		common
+	"underive"		common
+	"update-in"		common
+	"update-proxy"		common
+	"unless"		common
+	"use"		common
+	"val"		common
+	"vals"		common
+	"values"	common
+	"var-get"		common
+	"var-set"		common
+	"var?"		common
+	"vary-meta"		common
+	"vec"		common
+	"vector"		common
+	"vector-of"		common
+	"vector?"		common
+	"with"		common
+	"with-bindings*"		common
+	"with-meta"		common
+	"with-redefs-fn"		common
+	"write-char"		common
+	"xml-seq"		common
+	"zero?"		common
+	"zipmap"		common
+	"*1"		common
+	"*2"		common
+	"*3"		common
+	"*agent*"		common
+	"*allow-unresolved-vars*"		common
+	"*assert*"		common
+	"*command-line-args*"		common
+	"*compile-files*"		common
+	"*compile-path*"		common
+	"*compiler-options*"		common
+	"*data-readers*"		common
+	"*default-data-reader-fn*"		common
+	"*e"		common
+	"*err*"		common
+	"*file*"		common
+	"*flush-on-newline*"		common
+	"*fn-loader*"		common
+	"*in*"		common
+	"*math-context*"		common
+	"*ns*"		common
+	"*out*"		common
+	"*print-dup*"		common
+	"*print-length*"		common
+	"*print-level*"		common
+	"*print-meta*"		common
+	"*print-readably*"		common
+	"*read-eval*"		common
+	"*source-path*"		common
+	"*unchecked-math*"		common
+	"*use-context-classloader*"		common
+	"*verbose-defrecords*"		common
+	"*warn-on-reflection*"		common
+	"EMPTY-NODE"		common
+	"char-escape-string"		common
+	"char-name-string"		common
+	"default-data-readers"		common
+	"primitives-classnames"		common
+	"print-dup"		common
+	"print-method"		common
+	"unquote"		common
+	"unquote-splicing"		common
+done
+
+:value Value
+	*		idle		noeat
+
+:common Keyword
+	*		idle		noeat
+
+:ident_end Idle
+	*		idle		noeat
+
+# Mark remainder of symbol as bad
+
+:bad Bad
+	*		bad
+	")]},  \t\f\n\r;"	idle		noeat
+
+# Skip quote..
+
+:quote Idle
+	*		idle		noeat
+
+# Look for #_x, treat as comment
+# For example #_(a b c) should be all commented out
+
+:pound Idle
+	*		idle		noeat
+	"_"		pound_eat	recolor=-2
+
+:pound_eat Comment
+	*		idle		noeat
+
+:comment Comment
+	*		comment
+	"\n"		idle
+
+# Check some specific common bases
+
+:two Constant
+	*		number		noeat
+	"r"		binary
+
+:eight Constant
+	*		number		noeat
+	"r"		octal
+
+:one Constant
+	*		number		noeat
+	"0"		ten
+	"6"		sixteen
+
+:ten Constant
+	*		number		noeat
+	"r"		decimal
+
+:sixteen Constant
+	*		number		noeat
+	"r"		hex
+
+:hex Constant
+	*		bad		noeat
+	"NM"		bad
+	"0-9a-fA-F"	hex
+
+:octal Constant
+	*		bad		noeat
+	"NM"		bad
+	"0-7"		octal
+
+:binary Constant
+	*		bad		noeat
+	"NM"		bad
+	"01"		binary
+
+:decimal Constant
+	*		bad		noeat
+	"NM"		bad
+	"0-9"		decimal
+
+# Number, no r yet...
+
+:number Constant
+	*		bad		noeat
+	"NM"		bad
+	"0-9"		number
+	"r"		integer
+	"."		float
+	"/"		ratio
+
+# we got the r
+
+:integer Constant
+	*		bad		noeat
+	"NM"		bad
+	"0-9"		integer
+
+# We have a decimal point only
+
+:maybe_neg_float Constant
+	*		symbol		recolor=-2 noeat
+	"0-9"		float		recolor=-2
+
+:maybe_float Constant
+	*		idle		recolor=-2 noeat
+	"0-9"		float		recolor=-2
+
+# We have number and decimal point
+
+:float Constant
+	*		bad		noeat
+	"M"		bad
+	"eE"		epart
+	"0-9"		float
+
+:epart Constant
+	*		bad		noeat
+	"0-9+\-"	enum
+
+:enum Constant
+	*		bad		noeat
+	"M"		bad
+	"0-9"		enum
+
+# Ratio
+
+:ratio Constant
+	*		bad		noeat
+	"0-9"		ratio
+
+# Strings
+
+:key Key
+	"a-zA-Z0-9-/"	key
+	*		idle		recolor=-1
+	
+:method Method
+	"a-zA-Z0-9-/."  method
+	*		idle		recolor=-1
+
+:string	Constant
+	*		string
+	"\""		idle
+	"\\"		string_escape	recolor=-1
+
+:string_escape Escape
+	*		string
+	"u"		string_uni4
+	"0-7"		string_octal2
+	"\n"		string		recolor=-2
+
+:string_uni4 Escape
+	*		string		noeat
+	"0-9a-fA-F"	string_uni3
+
+:string_uni3 Escape
+	*		string		noeat
+	"0-9a-fA-F"	string_uni2
+
+:string_uni2 Escape
+	*		string		noeat
+	"0-9a-fA-F"	string_uni1
+
+:string_uni1 Escape
+	*		string		noeat
+	"0-9a-fA-F"	string
+
+:string_octal2 Escape
+	*		string		noeat
+	"0-7"		string_octal1
+
+:string_octal1 Escape
+	*		string		noeat
+	"0-7"		string
+
+.end
